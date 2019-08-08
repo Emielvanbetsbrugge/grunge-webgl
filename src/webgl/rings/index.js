@@ -1,8 +1,11 @@
 import * as THREE from 'three';
 
+let direction = 1;
+let frames = 0;
+const totalShapes = 30;
+
 const createGeometry = (innerWidth, depth, y) => {
-  console.log(y);
-  const geometry = new THREE.RingGeometry(innerWidth, innerWidth + 4, 120);
+  const geometry = new THREE.RingGeometry(innerWidth - 20, (innerWidth - 17), 50);
   const material = new THREE.MeshBasicMaterial({color: "#fff", side: THREE.DoubleSide});
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.y = y;
@@ -12,9 +15,8 @@ const createGeometry = (innerWidth, depth, y) => {
 
 export const makeRings = () => {
   const meshes = [];
-  const totalShapes = 100;
-  const totalTranslate = 0;
-  // let previousDeduction = 0;
+  
+  const yOffset = 10;
 
   for(let i = 0; i < totalShapes; i++) {
     /* 
@@ -23,25 +25,34 @@ export const makeRings = () => {
      * I think I'll need a value to go between, 
      * i becomes the value between numbers
     */ 
-
-    // const percentageDone = i - totalShapes;
     const percentage = (i * 100) / totalShapes;
-    // working some way
-    meshes[i] = createGeometry(70, 100 - 60 * i, totalTranslate - i * (1 * percentage));
-
-    // let's set a base and deduct a value off of that, let's increase that value, from the previous + an extra for each layer
-
-    // middle of the screen - previous deduction - (max deduction * percentage of items drawn)
-
-    // const percentage = (i * 100) / totalShapes;
-    // const base = 0;
-    // const maxDeduction = 20;
-
-    // const y = base - previousDeduction - (maxDeduction * percentage);
-    
-    // console.log(base, previousDeduction, maxDeduction, percentage);
-    // meshes[i] = createGeometry(70, 100 - 100 * i, y);
-    // previousDeduction = y;
+    // add another value to the percentage to transform the location.
+    // meshes[i] = createGeometry(70, 100 - 60 * i, yOffset - i * percentage * -.2);
+    meshes[i] = createGeometry(70, 100 - 60 * i, yOffset - (i / 2) * percentage);
   }
   return meshes;
+}
+
+const fluctuateValue = (number, max) => {
+  if (number === max - 1) {
+    direction = -1;
+  }
+
+  if(number === 0) {
+    direction = 1;
+  }
+  
+  return number + direction;
+}
+
+export const animateRings = meshes => {
+  frames = fluctuateValue(frames, totalShapes);
+  meshes.map((mesh, index) => {
+    if (index < frames) {
+      mesh.visible = true;
+    } else {
+      mesh.visible = false;
+    }
+    return mesh;
+  })
 }
