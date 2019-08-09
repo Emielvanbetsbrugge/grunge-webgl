@@ -15,7 +15,6 @@ const createGeometry = (innerWidth, depth, y) => {
 
 export const makeRings = () => {
   const meshes = [];
-  
   const yOffset = 10;
 
   for(let i = 0; i < totalShapes; i++) {
@@ -34,14 +33,9 @@ export const makeRings = () => {
 }
 
 const fluctuateValue = (number, max) => {
-  if (number === max - 1) {
-    direction = -1;
-  }
-
-  if(number === 0) {
-    direction = 1;
-  }
-  
+  if(number === max - 1) direction = -1;
+  if(number === 0) direction = 1;
+  // we could add some easing to this? Possibly?
   return number + direction;
 }
 
